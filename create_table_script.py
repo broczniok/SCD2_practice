@@ -5,19 +5,20 @@ spark = SparkSession.builder \
     .appName("Create Table") \
     .getOrCreate()
 
-schema = StructType([
-    StructField("dim_id", LongType(), True),
-    StructField("userId", StringType(), True),
-    StructField("eventId", StringType(), True),
-    StructField("eventType", StringType(), True),
-    StructField("eventTime", StringType(), True),
-    StructField("attributes", StringType(), True),
-    StructField("action_cd", StringType(), True),
-    StructField("created_ts", StringType(), True),
-    StructField("expired_ts", StringType(), True)
-])
 
-df = spark.createDataFrame([], schema)
-df.writeTo("demo.iceberg.mobileapp").createOrReplace()
+spark.sql("""
+CREATE OR REPLACE TABLE demo.iceberg.mobileapp (
+    dim_id INT,  
+    userId VARCHAR(255) NOT NULL,              
+    eventId VARCHAR(255) NOT NULL,             
+    eventType VARCHAR(100),                    
+    eventTime TIMESTAMP,                       
+    attributes VARCHAR(255),                           
+    action_cd CHAR(1),                         
+    created_ts TIMESTAMP, 
+    expired_ts TIMESTAMP                       
+);
 
-print(spark.catalog.tableExists("demo.iceberg.mobileapp"))
+""")
+
+spark.stop()
