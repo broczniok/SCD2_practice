@@ -1,24 +1,22 @@
-from pyspark.sql.types import LongType, StructType, StructField, StringType
 from pyspark.sql import SparkSession
 
 spark = SparkSession.builder \
-    .appName("Create Table") \
+    .appName("Create Table 2") \
     .getOrCreate()
 
 
 spark.sql("""
-CREATE OR REPLACE TABLE demo.iceberg.mobileapp (
-    dim_id INT,  
-    userId VARCHAR(255) NOT NULL,              
-    eventId VARCHAR(255) NOT NULL,             
-    eventType VARCHAR(100),                    
-    eventTime TIMESTAMP,                       
-    attributes VARCHAR(255),                           
+CREATE OR REPLACE TABLE demo.iceberg.customer_dim (
+    customer_id INT NOT NULL,              
+    name VARCHAR(255) NOT NULL,             
+    company VARCHAR(255),                    
+    salary FLOAT,                                                  
     action_cd CHAR(1),                         
     created_ts TIMESTAMP, 
     expired_ts TIMESTAMP                       
 );
 
 """)
+
 
 spark.stop()

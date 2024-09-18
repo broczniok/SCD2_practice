@@ -6,20 +6,20 @@ import time
 def query_app():
     start_time = time.time()
     spark = SparkSession.builder \
-        .appName("QueryApp") \
+        .appName("Extract") \
         .getOrCreate()
 
     filepath = "/home/iceberg/project/mobile_app_clickstream"
-    output_dir = "parquets"
+    filepath2 = "/home/iceberg/project/customer_data"
+
+    output_dir = "parquets_2"
 
     try:
         app_read = spark.read.option("header", "true") \
             .option("inferSchema", "true") \
-            .csv(filepath)
+            .csv(filepath2)
 
-        app_read = app_read.withColumn("date", to_date(col("eventTime")))
-        app_read = app_read.coalesce(5)
-        app_read.write.partitionBy("date").parquet(output_dir, mode="append")
+        app_read.write.parquet(output_dir, mode="overwrite")
 
     except Exception as e:
         print(f"Error processing file {filepath}: {e}")
